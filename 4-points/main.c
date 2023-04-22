@@ -5,80 +5,73 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <semaphore.h>
 
-int input_size = 5000;
-int output_size = 3;
+void seller(sem_t *sem) {
+    printf("Seller PID: %d\n", getpid());
 
-void first_read(int fd[2], char* file) {
-    printf("Reader PID: %d\n", getpid());
+    while (1) {
+        sem_wait(sem);
 
-    char buffer[input_size];
-    int input = open(file, O_RDONLY);
-    int num = read(input, buffer, input_size);
+        printf("Selling stock\n");
+        sleep(1);
 
-    char size[10];
-    sprintf(size, "%d", num);
-    write(fd[1], size, 10);
-    write(fd[1], buffer, num);
+        sem_post(sem);
+    }
 }
 
-void second_process(int fd1[2], int fd2[2]) {
-    printf("Processor PID: %d\n", getpid());
+void buyer(int *list[], int size, sem_t *sem_first, sem_t *sem_second) {
+    printf("Buyer PID: %d\n", getpid());
 
-    char size[10];
-    read(fd1[0], size, 10);
-    int num;
-    sscanf(size, "%d", &num);
-
-    char buffer[num];
-    read(fd1[0], buffer, num);
-
-    char min = buffer[0], max = buffer[0];
-    for (size_t i = 1; i < num; i++)
+    for (size_t i = 0; i < size; i++)
     {
-        if (min > buffer[i]) {
-            min = buffer[i];
-        }
-        if (max < buffer[i]) {
-            max = buffer[i];
+        if (i % 2 == 0) {
+            sem_wait(sem_first);
+
+            printf("Buying stock\n");
+            sleep(1);
+
+            sem_post(sem_first);
+        } else {
+            sem_wait(sem_second);
+
+            printf("Buying stock\n");
+            sleep(1);
+
+            sem_post(sem_second);
         }
     }
-
-    buffer[0] = min;
-    buffer[1] = '\n';
-    buffer[2] = max;
-    write(fd2[1], buffer, output_size);
-}
-
-void third_write(int fd[2], char* file) {
-    printf("Writer PID: %d\n", getpid());
-
-    char buffer[output_size];
-    read(fd[0], buffer, output_size);
-
-    int output = open(file, O_WRONLY | O_CREAT);
-    write(output, buffer, output_size);
 }
 
 int main(int argc, char **argv) {
-    int input[2], output[2];
-    pipe(input);
-    pipe(output);
+    sem_t *sem_first, *sem_second;
+
+    sem_first = sem_open("first", 0);
+    sem_second = sem_open("second", 0);
     
     int id = fork();
     if (id == 0) {
-        first_read(input, argv[1]);
+        seller(sem_first);
     } else {
         id = fork();
         if (id == 0) {
-            second_process(input, output);
+            seller(sem_second);
         }
         else {
             id = fork();
             if (id == 0) {
-                third_write(output, argv[2]);
+                buyer(0, 5, sem_first, sem_second);
             }
         }
     }
+
+    sem_close(sem_first);
+    sem_close(sem_second);
+
     return 0;
 }
