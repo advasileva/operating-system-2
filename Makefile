@@ -1,4 +1,4 @@
-points = 4
+points = 5
 tests = 3
 
 chmod:

@@ -14,18 +14,20 @@
 #include <sys/mman.h>
 #include <string.h>
 
+// DTO покупателя
 typedef struct person {
     int list[30];
     int size;
  } person;
 
+// Логика работы продавца
 void seller(sem_t *sem, char *addr, int id) {
     printf("Seller %d PID: %d\n", id, getpid());
 
-    while (addr[0] == 1) {
+    while (addr[0] == 1) { // Пока не закончили работу
         sem_wait(sem);
 
-        if (addr[id] != 0)
+        if (addr[id] != 0) // Если в нашей очереди есть покупатель, то обслуживаем его
         {
             printf("Selling stock %d by %d\n", addr[id], id);
             addr[id] = 0;
@@ -37,15 +39,16 @@ void seller(sem_t *sem, char *addr, int id) {
     printf("Seller %d finished\n", id);
 }
 
+// Логика работы покупателя
 void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr) {
     printf("Buyer PID: %d\n", getpid());
     addr[3]++;
 
-    for (size_t i = 0; i < size; i++) {   
-        if (list[i] % 2 == 1) {
+    for (size_t i = 0; i < size; i++) { // Последовательно покупаем все товары из списка
+        if (list[i] % 2 == 1) { // Проверяем, в какой отдел нам надо идти
             sem_wait(sem_first);
 
-            if (addr[1] == 0) {
+            if (addr[1] == 0) { // Если продавец свободен, то покупаем
                 printf("Buying stock %d from 1\n", list[i]);
                 addr[1] = list[i];
             } else {
@@ -71,15 +74,16 @@ void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr)
         }
     }
 
-    addr[3]--;
-    if (addr[3] == 0)
+    addr[3]--; // Текущий покупатель купил все товары из списка
+    if (addr[3] == 0) // Проверяем, все ли покупатели всё купили
     {
-        addr[0] = 0;
+        addr[0] = 0; // Завершаем работу
     }
     
 }
 
-int fork_buyers(person buyers[], int n, sem_t *sem_first, sem_t *sem_second, char *addr) {
+// Рекурсивный форк процессов-покупателей
+int fork_buyers(person buyers[], int n, sem_t *sem_first, sem_t *sem_second, char *addr) { 
     if (n == 0) {
         return 0;
     }
@@ -97,6 +101,7 @@ int main(int argc, char **argv) {
     sem_t *sem_first, *sem_second;
     person buyers[20];
 
+    // Ввод информации о покупателях
     int input = open(argv[1], O_RDONLY);
     read(input, &n, 1);
     n -= '0';
@@ -113,6 +118,7 @@ int main(int argc, char **argv) {
         }
     }
 
+    // Работа с разделяемой памятью
     shm = shm_open(memn, O_RDWR | O_CREAT, 0777);
     ftruncate(shm, shm_size);
     addr = mmap(0, shm_size, PROT_WRITE|PROT_READ, MAP_SHARED, shm, 0);
@@ -121,6 +127,7 @@ int main(int argc, char **argv) {
     addr[2] = 0;
     addr[3] = 0;
 
+    // Создание именнованных семафоров
     sem_first = sem_open("first", 0);
     sem_second = sem_open("second", 0);
     
@@ -137,8 +144,10 @@ int main(int argc, char **argv) {
         }
     }
 
+    // Освобождение памяти
     shm_unlink(memn);
 
+    // Закрытие именованных семафоров
     sem_close(sem_first);
     sem_close(sem_second);
 
