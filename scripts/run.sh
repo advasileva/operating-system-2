@@ -7,11 +7,9 @@ do
     do
         echo "Test $j"
         ./$i-points/main.exe tests/test$j.in
-        sleep 5
+        sleep 10
         echo
     done
-    echo 20
     echo
 done
-echo 40
 echo "Programs finished"
