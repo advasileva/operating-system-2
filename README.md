@@ -230,7 +230,65 @@
 
     Пример работы:
     ```bash
-    TBA
+    Program for 6 points
+    Test 1
+    Seller 1 PID: 84428
+    Seller 2 PID: 84429
+    Buyer PID: 84430
+    Buying stock 2 from 2
+    Selling stock 2 by 2
+    Buying stock 3 from 1
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Buying stock 6 from 2
+    Selling stock 5 by 1
+    Selling stock 6 by 2
+    Seller 1 finished
+    Seller 2 finished
+
+    Test 2
+    Seller 1 PID: 84450
+    Seller 2 PID: 84451
+    Buyer PID: 84452
+    Buying stock 4 from 2
+    Buyer PID: 84453
+    Selling stock 4 by 2
+    Buying stock 1 from 1
+    Buying stock 2 from 2
+    Selling stock 2 by 2
+    Selling stock 1 by 1
+    Buying stock 3 from 1
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Selling stock 5 by 1
+    Seller 2 finished
+    Seller 1 finished
+
+    Test 3
+    Seller 1 PID: 84460
+    Seller 2 PID: 84461
+    Buyer PID: 84462
+    Buying stock 3 from 1
+    Buyer PID: 84463
+    Buying stock 4 from 2
+    Buyer PID: 84464
+    Selling stock 3 by 1
+    Selling stock 4 by 2
+    Buying stock 6 from 2
+    Buying stock 1 from 1
+    Selling stock 6 by 2
+    Selling stock 1 by 1
+    Buying stock 2 from 2
+    Selling stock 2 by 2
+    Buying stock 3 from 1
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Selling stock 5 by 1
+    Seller 2 finished
+    Seller 1 finished
+
+
+    Programs finished
     ```
 
 ## Как запустить
