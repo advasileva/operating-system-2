@@ -6,7 +6,9 @@ do
     for j in `seq 1 $2`
     do
         echo "Test $j"
-        ./$i-points/main.exe tests/test$j.in
+        ./$i-points/main.exe
+        sleep 5
+        echo
     done
     echo
 done
