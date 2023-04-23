@@ -38,7 +38,6 @@ void buyer(int *list[], int size, sem_t *sem_first, sem_t *sem_second, char *add
 
     for (size_t i = 0; i < size; i++)
     {   
-        // addr[0] = 1;
         if (i % 2 == 0) {
             sem_wait(sem_first);
 

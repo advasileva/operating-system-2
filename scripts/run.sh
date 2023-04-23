@@ -10,6 +10,7 @@ do
         sleep 5
         echo
     done
+    echo 20
     echo
 done
 echo "Programs finished"

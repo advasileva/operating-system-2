@@ -46,12 +46,14 @@
 
 5. *Реализовать завершение программы в соответствии с условием задачи, а также предусмотреть корректное завершение по прерыванию с клавиатуры по соответствующему сигналу.*
 
-    TBA
+    По умолчанию программа завершается после завершения работы покупателей. Также можно прервать программу, например, с помощью `Ctrl+C`.
 
 6. *В программе предусмотреть удаление семафоров и разделяемой памяти по ее завершению любым из способов.*
 
     Завершенение работы реализовано так:
     ```c
+    shm_unlink(memn);
+
     sem_close(sem_first);
     sem_close(sem_second);
     ```
@@ -60,7 +62,54 @@
 
     Пример работы:
     ```bash
-    TBA
+    Test 1
+    Seller PID: 72210
+    Seller PID: 72211
+    Buyer PID: 72212
+    Buying stock from 1
+    Selling stock by 1
+    Buying stock from 2
+    Selling stock by 2
+    Buying stock from 1
+    Selling stock by 1
+    Buying stock from 2
+    Buying stock from 1
+    Selling stock by 2
+    Selling stock by 1
+    Seller 2 finished
+
+    Test 2
+    Seller PID: 72225
+    Seller PID: 72226
+    Buyer PID: 72227
+    Buying stock from 1
+    Seller 1 finished
+    Buying stock from 2
+    Selling stock by 1
+    Buying stock from 1
+    Selling stock by 2
+    Selling stock by 1
+    Buying stock from 2
+    Selling stock by 2
+    Buying stock from 1
+    Selling stock by 1
+    Seller 2 finished
+
+    Test 3
+    Seller PID: 72235
+    Seller PID: 72236
+    Buyer PID: 72237
+    Buying stock from 1
+    Seller 1 finished
+    Selling stock by 1
+    Buying stock from 2
+    Selling stock by 2
+    Buying stock from 1
+    Selling stock by 1
+    Buying stock from 2
+    Selling stock by 2
+    Buying stock from 1
+    Selling stock by 1
     ```
 
 ### 5 баллов
