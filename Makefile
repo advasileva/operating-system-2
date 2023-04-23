@@ -9,8 +9,4 @@ compile:
 
 run:
 	make chmod
-	make clear
 	./scripts/run.sh ${points} ${tests}
-
-clear:
-	./scripts/clear.sh 6 ${tests}

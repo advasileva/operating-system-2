@@ -127,9 +127,9 @@ int main(int argc, char **argv) {
     addr[2] = 0;
     addr[3] = 0;
 
-    // Создание именнованных семафоров
-    sem_first = sem_open("first", 0);
-    sem_second = sem_open("second", 0);
+    // Создание неименнованных семафоров
+    sem_init(sem_first, 0, 1);
+    sem_init(sem_second, 0, 1);
     
     int id = fork();
     if (id == 0) {
@@ -147,9 +147,9 @@ int main(int argc, char **argv) {
     // Освобождение памяти
     shm_unlink(memn);
 
-    // Удаление именованных семафоров
-    sem_close(sem_first);
-    sem_close(sem_second);
+    // Удаление неименованных семафоров
+    sem_destroy(sem_first);
+    sem_destroy(sem_second);
 
     return 0;
 }

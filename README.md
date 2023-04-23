@@ -148,7 +148,65 @@
 
     Пример работы:
     ```bash
-    TBA
+    Program for 5 points
+    Test 1
+    Seller 1 PID: 84069
+    Seller 2 PID: 84070
+    Buyer PID: 84071
+    Buying stock 2 from 2
+    Selling stock 2 by 2
+    Buying stock 3 from 1
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Buying stock 6 from 2
+    Selling stock 5 by 1
+    Selling stock 6 by 2
+    Seller 1 finished
+    Seller 2 finished
+
+    Test 2
+    Seller 1 PID: 84081
+    Seller 2 PID: 84082
+    Buyer PID: 84083
+    Buying stock 4 from 2
+    Buyer PID: 84084
+    Selling stock 4 by 2
+    Buying stock 1 from 1
+    Buying stock 2 from 2
+    Selling stock 1 by 1
+    Selling stock 2 by 2
+    Buying stock 3 from 1
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Selling stock 5 by 1
+    Seller 2 finished
+    Seller 1 finished
+
+    Test 3
+    Seller 1 PID: 84097
+    Seller 2 PID: 84098
+    Buyer PID: 84099
+    Buying stock 3 from 1
+    Buyer PID: 84100
+    Buying stock 4 from 2
+    Buyer PID: 84101
+    Selling stock 3 by 1
+    Selling stock 4 by 2
+    Buying stock 1 from 1
+    Buying stock 2 from 2
+    Selling stock 1 by 1
+    Selling stock 2 by 2
+    Buying stock 3 from 1
+    Buying stock 6 from 2
+    Selling stock 6 by 2
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Selling stock 5 by 1
+    Seller 2 finished
+    Seller 1 finished
+
+
+    Programs finished
     ```
 
 ### 6 баллов 
@@ -187,10 +245,4 @@ make run
 
 ```bash
 make compile
-```
-
-Удалить результаты тестов:
-
-```bash
-make clear
 ```
