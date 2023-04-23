@@ -1,5 +1,5 @@
 points = 4
-tests = 3
+tests = 1
 
 chmod:
 	chmod -R +xr .

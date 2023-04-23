@@ -6,11 +6,12 @@ do
     for j in `seq 1 $2`
     do
         echo "Test $j"
-        ./$i-points/main.exe
+        ./$i-points/main.exe tests/test$j.in
         sleep 5
         echo
     done
     echo 20
     echo
 done
+echo 20
 echo "Programs finished"
