@@ -36,9 +36,13 @@
 
     Задача описана достаточно подробно. У нас есть 5 сущностей -- продавец, покупатель, товар, ассортимент, список.
     
-    Продавец и покупатель будут представлены процессами (два процесса для двух продавцов и `n` процессов для покупателей в зависимости от теста). Товар будет представлен числовым идентификатором типа int. Ассортимент продавца и список покупателя будут представлены массивами из идентификаторов (товаров). 
+    Продавец и покупатель будут представлены процессами (два процесса для двух продавцов и `n` процессов для покупателей в зависимости от теста). Товар будет представлен числовым идентификатором типа int. Ассортимент поделен так, что в первом отделе товары с нечётными идентификаторами, во втором -- с чётными. Списки покупателей будут представлены массивами из идентификаторов (товаров). 
 
-    Процессы продавцов и покупателей будут взаимодействовать между собой через разделяемую память посредством семафоров. Каждый продавец будет иметь ассортимент и каждый покупатель будет иметь список. В ассортиментах и списках будут встречаться идентификаторы товаров не более `m`.
+    Процессы продавцов и покупателей будут взаимодействовать между собой через разделяемую память посредством семафоров. Каждый продавец будет иметь ассортимент и каждый покупатель будет иметь список.
+
+    Формат входных данных в файле, передаваемом первым аргументом командной строки: в первой строке записано число `n` -- количество покупателей. Далее описаны `n` покупателей в формате: в первой строке число `k` -- количество товаров в списке этого покупателя, в следующей строке `k` чисел -- идентификаторы товаров.
+
+    В коде есть комментарии
 
 4. *Множество процессов взаимодействуют с использованием именованных POSIX семафоров. Обмен данными ведется через разделяемую память в стандарте POSIX.*
 
@@ -62,54 +66,65 @@
 
     Пример работы:
     ```bash
+    Program for 4 points
     Test 1
-    Seller PID: 72210
-    Seller PID: 72211
-    Buyer PID: 72212
-    Buying stock from 1
-    Selling stock by 1
-    Buying stock from 2
-    Selling stock by 2
-    Buying stock from 1
-    Selling stock by 1
-    Buying stock from 2
-    Buying stock from 1
-    Selling stock by 2
-    Selling stock by 1
+    Seller 1 PID: 83142
+    Seller 2 PID: 83143
+    Buyer PID: 83144
+    Buying stock 2 from 2
+    Buying stock 3 from 1
+    Selling stock 2 by 2
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Selling stock 5 by 1
+    Buying stock 6 from 2
+    Selling stock 6 by 2
+    Seller 1 finished
     Seller 2 finished
 
     Test 2
-    Seller PID: 72225
-    Seller PID: 72226
-    Buyer PID: 72227
-    Buying stock from 1
+    Seller 1 PID: 83157
+    Seller 2 PID: 83158
+    Buyer PID: 83159
+    Buying stock 4 from 2
+    Buyer PID: 83160
+    Selling stock 4 by 2
+    Buying stock 1 from 1
+    Buying stock 2 from 2
+    Selling stock 2 by 2
+    Selling stock 1 by 1
+    Buying stock 3 from 1
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Selling stock 5 by 1
     Seller 1 finished
-    Buying stock from 2
-    Selling stock by 1
-    Buying stock from 1
-    Selling stock by 2
-    Selling stock by 1
-    Buying stock from 2
-    Selling stock by 2
-    Buying stock from 1
-    Selling stock by 1
     Seller 2 finished
 
     Test 3
-    Seller PID: 72235
-    Seller PID: 72236
-    Buyer PID: 72237
-    Buying stock from 1
+    Seller 1 PID: 83167
+    Seller 2 PID: 83168
+    Buyer PID: 83169
+    Buying stock 3 from 1
+    Buyer PID: 83170
+    Buying stock 4 from 2
+    Buyer PID: 83171
+    Selling stock 3 by 1
+    Selling stock 4 by 2
+    Buying stock 1 from 1
+    Buying stock 2 from 2
+    Selling stock 2 by 2
+    Selling stock 1 by 1
+    Buying stock 3 from 1
+    Buying stock 6 from 2
+    Selling stock 6 by 2
+    Selling stock 3 by 1
+    Buying stock 5 from 1
+    Selling stock 5 by 1
     Seller 1 finished
-    Selling stock by 1
-    Buying stock from 2
-    Selling stock by 2
-    Buying stock from 1
-    Selling stock by 1
-    Buying stock from 2
-    Selling stock by 2
-    Buying stock from 1
-    Selling stock by 1
+    Seller 2 finished
+
+
+    Programs finished
     ```
 
 ### 5 баллов
