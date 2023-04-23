@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in `seq 6 $1`
+for i in `seq 4 $1`
 do
     echo "Program for $i points"
     for j in `seq 1 $2`

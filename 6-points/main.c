@@ -21,11 +21,13 @@ typedef struct person {
  } person;
 
 // Логика работы продавца
-void seller(sem_t *sem, char *addr, int id) {
+void seller(int sem, char *addr, int id) {
+    struct sembuf second_buf = {.sem_num = 0, .sem_op = 1, .sem_flg = 0};
+    struct sembuf first_buf = {.sem_num = 0, .sem_op = -1, .sem_flg = 0};
     printf("Seller %d PID: %d\n", id, getpid());
 
     while (addr[0] == 1) { // Пока не закончили работу
-        sem_wait(sem);
+        semop(sem, &first_buf, 1);
 
         if (addr[id] != 0) // Если в нашей очереди есть покупатель, то обслуживаем его
         {
@@ -34,19 +36,21 @@ void seller(sem_t *sem, char *addr, int id) {
         }
         sleep(1);
 
-        sem_post(sem);
+        semop(sem, &second_buf, 1);
     }
     printf("Seller %d finished\n", id);
 }
 
 // Логика работы покупателя
-void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr) {
+void buyer(int *list, int size, int sem_first, int sem_second, char *addr) {
+    struct sembuf second_buf = {.sem_num = 0, .sem_op = 1, .sem_flg = 0};
+    struct sembuf first_buf = {.sem_num = 0, .sem_op = -1, .sem_flg = 0};
     printf("Buyer PID: %d\n", getpid());
     addr[3]++;
 
     for (size_t i = 0; i < size; i++) { // Последовательно покупаем все товары из списка
         if (list[i] % 2 == 1) { // Проверяем, в какой отдел нам надо идти
-            sem_wait(sem_first);
+            semop(sem_first, &first_buf, 1);
 
             if (addr[1] == 0) { // Если продавец свободен, то покупаем
                 printf("Buying stock %d from 1\n", list[i]);
@@ -57,9 +61,9 @@ void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr)
             
             sleep(1);
 
-            sem_post(sem_first);
+            semop(sem_first, &second_buf, 1);
         } else {
-            sem_wait(sem_second);
+            semop(sem_second, &first_buf, 1);
 
             if (addr[2] == 0) {
                 printf("Buying stock %d from 2\n", list[i]);
@@ -70,7 +74,7 @@ void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr)
 
             sleep(1);
 
-            sem_post(sem_second);
+            semop(sem_second, &second_buf, 1);
         }
     }
 
