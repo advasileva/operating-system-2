@@ -28,7 +28,7 @@ void seller(sem_t *sem, char *addr, int id) {
 
         if (addr[id] != 0)
         {
-            printf("Selling stock by %d\n", id);
+            printf("Selling stock %d by %d\n", addr[id], id);
             addr[id] = 0;
         }
         sleep(1);
@@ -43,12 +43,12 @@ void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr)
 
     for (size_t i = 0; i < size; i++)
     {   
-        if (i % 2 == 0) {
+        if (list[i] % 2 == 1) {
             sem_wait(sem_first);
 
             if (addr[1] == 0) {
-                printf("Buying stock from 1\n");
-                addr[1] = 1;
+                printf("Buying stock %d from 1\n", list[i]);
+                addr[1] = list[i];
             } else {
                 i--;
             }
@@ -60,8 +60,8 @@ void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr)
             sem_wait(sem_second);
 
             if (addr[2] == 0) {
-                printf("Buying stock from 2\n");
-                addr[2] = 1;
+                printf("Buying stock %d from 2\n", list[i]);
+                addr[2] = list[i];
             } else {
                 i--;
             }
@@ -76,7 +76,7 @@ void buyer(int *list, int size, sem_t *sem_first, sem_t *sem_second, char *addr)
 
 int fork_buyers(person users[], int n, sem_t *sem_first, sem_t *sem_second, char *addr) {
     if (fork() == 0) {
-        buyer(0, 5, sem_first, sem_second, addr);
+        buyer(users[n - 1].list, users[n - 1].size, sem_first, sem_second, addr);
         return 0;
     }
     return 0;
@@ -85,25 +85,26 @@ int fork_buyers(person users[], int n, sem_t *sem_first, sem_t *sem_second, char
 
 int main(int argc, char **argv) {
     char memn[] = "shared-memory";
-    int shm, shm_size = 10, n = 0, k = 0;
+    int shm, shm_size = 10, n = 0, k = 0, t = 0;
     char *addr;
     sem_t *sem_first, *sem_second;
-    person *buyers;
+    person buyers[10];
 
     int input = open(argv[1], O_RDONLY);
     read(input, &n, 1);
     n -= '0';
-    printf("Got n %d\n", n);
     for (size_t i = 0; i < n; i++)
     {
         read(input, &k, 1);
         read(input, &k, 1);
         k -= '0';
-        printf("Got k %d\n", k);
-        // buyers[i].size = k; 
-        for (size_t j = 0; j < k; j++)
+        buyers[i].size = k; 
+        for (size_t j = 0; j < 4; j++)
         {
-            // read(input, &buyers[i].list[j], 1);
+            read(input, &t, 1);
+            read(input, &t, 1);
+            t -= '0';
+            buyers[i].list[j] = t;
         }
     }
 
@@ -126,11 +127,7 @@ int main(int argc, char **argv) {
             seller(sem_second, addr, 2);
         }
         else {
-            // fork_buyers(buyers, n, sem_first, sem_second, addr);
-            id = fork();
-            if (id == 0) {
-                buyer(0, 5, sem_first, sem_second, addr);
-            }
+            fork_buyers(buyers, n, sem_first, sem_second, addr);
         }
     }
 

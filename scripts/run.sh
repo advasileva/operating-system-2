@@ -13,5 +13,5 @@ do
     echo 20
     echo
 done
-echo 20
+echo 40
 echo "Programs finished"
