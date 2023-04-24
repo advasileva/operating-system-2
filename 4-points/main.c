@@ -13,6 +13,7 @@
 #include <semaphore.h>
 #include <sys/mman.h>
 #include <string.h>
+#include <signal.h>
 
 // DTO покупателя
 typedef struct person {
@@ -104,8 +105,6 @@ void clear(int x) {
     // Удаление именованных семафоров
     sem_close(sem_first);
     sem_close(sem_second);
-
-    printf("Data cleared");
 }
 
 int main(int argc, char **argv) {
@@ -159,7 +158,6 @@ int main(int argc, char **argv) {
     clear(0);
     struct sigaction sa;
     sa.sa_handler = clear;
-    sigaction(SIGINT, &sa, NULL);
     sigaction(SIGTERM, &sa, NULL);
 
     return 0;

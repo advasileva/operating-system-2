@@ -13,12 +13,16 @@
 #include <semaphore.h>
 #include <sys/mman.h>
 #include <string.h>
+#include <signal.h>
 
 // DTO покупателя
 typedef struct person {
     int list[30];
     int size;
  } person;
+
+char memn[] = "shared-memory";
+int sem_first, sem_second;
 
 // Логика работы продавца
 void seller(int sem, char *addr, int id) {
@@ -98,11 +102,18 @@ int fork_buyers(person buyers[], int n, sem_t *sem_first, sem_t *sem_second, cha
     return fork_buyers(buyers, n - 1, sem_first, sem_second, addr);
 }
 
+void clear(int x) {
+    // Освобождение памяти
+    shm_unlink(memn);
+
+    // Удаление семафоров в стандарте UNIX SYSTEM V
+    semctl(sem_first, 0, IPC_RMID, 0);
+    semctl(sem_second, 0, IPC_RMID, 0);
+}
+
 int main(int argc, char **argv) {
-    char memn[] = "shared-memory";
     int shm, shm_size = 10, n = 0, k = 0, t = 0;
     char *addr;
-    int sem_first, sem_second;
     person buyers[20];
 
     // Ввод информации о покупателях
@@ -151,12 +162,10 @@ int main(int argc, char **argv) {
         }
     }
 
-    // Освобождение памяти
-    shm_unlink(memn);
-
-    // Удаление семафоров в стандарте UNIX SYSTEM V
-    semctl(sem_first, 0, IPC_RMID, 0);
-    semctl(sem_second, 0, IPC_RMID, 0);
+    clear(0);
+    struct sigaction sa;
+    sa.sa_handler = clear;
+    sigaction(SIGTERM, &sa, NULL);
 
     return 0;
 }
